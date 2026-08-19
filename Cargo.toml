@@ -1,0 +1,11 @@
+[package]
+name = "corallium_config"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+chrono = "0.4.45"
+gamepads = "0.1.7"
+macroquad = "0.4.16"
+system_shutdown = "4.1.0"
+volumecontrol = "0.1.4"
