@@ -149,7 +149,7 @@ async fn main() {
         match selected_option {
             0 => {
                 if is_enter_pressed() {
-                    process::exit(3);
+                    process::exit(0);
                 }
             }
             1 => {
