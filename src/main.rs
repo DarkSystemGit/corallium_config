@@ -4,14 +4,18 @@ use macroquad::{
     miniquad::window::{dpi_scale, screen_size, set_window_position},
     prelude::*,
 };
-use std::process;
+use std::{default, process};
 use system_shutdown::shutdown;
 use volumecontrol::AudioDevice;
 #[macroquad::main("CoralliumConfig")]
 async fn main() {
-    let auddevice = AudioDevice::from_default().expect("couldn't find audio device");
+    let mut auddevice = AudioDevice::from_default().ok();
     let mut selected_option = 0;
-    let mut volume = auddevice.get_vol().expect("couldnt get vol") as f64 / 100.0;
+    let mut volume = if let Some(auddevice) = &mut auddevice {
+        auddevice.get_vol().unwrap_or(0) as f64 / 100.0
+    } else {
+        0.0
+    };
     let battery_level = 1.00;
     let now = Local::now();
     let bg_texture = load_texture("assets/menu.png").await.unwrap();
@@ -61,7 +65,9 @@ async fn main() {
         texture.set_filter(FilterMode::Nearest);
     }
     loop {
-        auddevice.set_vol((volume * 100.0) as u8);
+        if let Some(auddevice) = &mut auddevice {
+            auddevice.set_vol((volume * 100.0) as u8);
+        };
         let hr = now.hour();
         let min = now.minute();
         clear_background(BLACK);
